@@ -1,0 +1,11 @@
+<svg class="schedule">
+  <!-- hour blocks -->
+  <svg *ngFor="let block of hourBlocks" [attr.y]="block.y" width="100%">
+    <line x1="50" y1="5" x2="100%" y2="5" class="hour-line" />
+    <svg>
+      <text x="0" y="10" class="hour-label" [ngClass]="block.hourClass">
+        {{ block.hourLabel }}
+      </text>
+    </svg>
+  </svg>
+</svg>
