@@ -8,7 +8,9 @@
 }
 
 .schedule-container {
+  padding-top: 1rem;
   width: 50%;
   height: 75%;
-  border: 1px solid seagreen;
+  overflow-y: auto;
+  overflow-x: hidden;
 }

@@ -1,20 +1,69 @@
-.schedule {
-  width: 100%;
-  height: 100%;
+$hour-label-width: 70px;
+
+.schedule-container {
+  position: relative;
+  min-width: 660px;
 }
 
-.background {
+.hour-block {
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  position: relative;
 }
 
 .hour-line {
-  stroke: var(--surface-border);
-  fill: var(--surface-border);
-  stroke-width: 2;
+  border-top: 1px solid var(--surface-border);
+  width: calc(100% - $hour-label-width);
 }
 
 .hour-label {
-  font-size: 0.875rem;
-  fill: var(--surface-900);
+  width: $hour-label-width;
+  color: var(--surface-900);
+  margin-top: -8px;
 }
+
+.now-line {
+  position: absolute;
+  // top: 595px; // -5px because of the circle radius
+  left: 0;
+  right: 0;
+  z-index: 100;
+  margin-left: $hour-label-width;
+  display: flex;
+  align-items: center;
+
+  .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--surface-900);
+  }
+
+  .line {
+    background-color: var(--surface-900);
+    width: 100%;
+    height: 2px;
+  }
+}
+
+// .schedule {
+//   width: 100%;
+//   height: 100%;
+// }
+
+// .background {
+//   width: 100%;
+//   height: 100%;
+// }
+
+// .hour-line {
+//   stroke: var(--surface-border);
+//   fill: var(--surface-border);
+//   stroke-width: 2;
+// }
+
+// .hour-label {
+//   font-size: 0.875rem;
+//   fill: var(--surface-900);
+// }

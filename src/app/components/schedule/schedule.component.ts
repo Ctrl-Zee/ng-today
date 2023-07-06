@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HourBlock } from 'src/app/models/hour-block';
 import { ScheduleStore } from './schedule.store';
 
 @Component({
@@ -15,6 +14,10 @@ export class ScheduleComponent {
   calendarConfig$ = this.scheduleStore.calendarConfig$;
 
   constructor(private scheduleStore: ScheduleStore) {}
+
+  ngOnInit(): void {
+    this.scheduleStore.updateSchedule(); // kick off the schedule update
+  }
 
   toggleZoom(zoom: number) {
     this.scheduleStore.updateZoom(zoom === 1 ? 2 : 1);

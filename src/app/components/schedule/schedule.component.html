@@ -1,24 +1,12 @@
-<svg
-  *ngIf="calendarConfig$ | async as config"
-  class="schedule"
-  (click)="toggleZoom(config.zoom)"
->
-  <!-- hour blocks -->
-  <svg *ngFor="let block of config.hourBlocks" [attr.y]="block.y" width="100%">
-    <line
-      [attr.x1]="config.hourLine.x1"
-      [attr.x2]="config.hourLine.x2"
-      [attr.y1]="config.hourLine.y1"
-      [attr.y2]="config.hourLine.y2"
-      class="hour-line"
-    />
-    <text
-      [attr.x]="config.hourLabel.x"
-      [attr.y]="config.hourLabel.y"
-      class="hour-label"
-      [ngClass]="block.hourClass"
-    >
-      {{ block.hourLabel }}
-    </text>
-  </svg>
-</svg>
+<div class="schedule-container" *ngIf="calendarConfig$ | async as config" (click)="toggleZoom(config.zoom)">
+  <!-- top value is set via inline css based on the configuration object -->
+  <div class="now-line" [style.top.px]="config.nowLinePx">
+    <div class="circle"></div>
+    <div class="line"></div>
+  </div>
+  <!-- hour block height is set via inline css based on the configuration object -->
+  <div *ngFor="let block of config.hourBlocks" [style.height.px]="block.height" class="hour-block">
+    <div class="hour-label">{{ block.hourLabel }}</div>
+    <div class="hour-line"></div>
+  </div>
+</div>
