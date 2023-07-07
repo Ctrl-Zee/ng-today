@@ -17,6 +17,7 @@ export class ScheduleComponent {
 
   ngOnInit(): void {
     this.scheduleStore.updateSchedule(); // kick off the schedule update
+    this.scheduleStore.getMeetings();
   }
 
   toggleZoom(zoom: number) {

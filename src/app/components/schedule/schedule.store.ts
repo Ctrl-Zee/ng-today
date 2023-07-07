@@ -2,24 +2,23 @@ import { Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { getYear, getMonth, getDate, addMinutes, differenceInMinutes } from 'date-fns';
 import { Observable, of, switchMap, timer } from 'rxjs';
+import { MeetingService } from 'src/app/core/meeting.service';
 import { HourBlock } from 'src/app/models/hour-block';
+import { Meeting } from 'src/app/models/meeting';
+import { calculateNowLineTopValue } from 'src/app/utilities/schedule-helper';
 
 interface ScheduleState {
   zoom: number;
   hourBlocks: HourBlock[];
   nowLinePx: number;
+  meetings: Meeting[];
 }
 
 @Injectable()
 export class ScheduleStore extends ComponentStore<ScheduleState> {
   calendarConfig$ = this.select((state) => state);
 
-  workDayStart!: Date;
-  workdayLength = 600;
-  workdayEnd!: Date;
-  circleRadius = 5;
-
-  constructor() {
+  constructor(private meetingService: MeetingService) {
     super({
       zoom: 1,
       hourBlocks: [
@@ -36,11 +35,8 @@ export class ScheduleStore extends ComponentStore<ScheduleState> {
         { hourLabel: '6:00', militaryTime: 18, height: 60 },
       ],
       nowLinePx: -20,
+      meetings: [],
     });
-
-    const now = new Date();
-    this.workDayStart = new Date(getYear(now), getMonth(now), getDate(now), 8, 0, 0);
-    this.workdayEnd = addMinutes(this.workDayStart, this.workdayLength);
   }
 
   updateZoom(zoom: number) {
@@ -50,7 +46,8 @@ export class ScheduleStore extends ComponentStore<ScheduleState> {
         ...hourBlock,
         height: this.calculateZoom(hourBlock.height, zoom),
       })),
-      nowLinePx: this.calculateTopValue(new Date(), zoom),
+      nowLinePx: calculateNowLineTopValue(new Date(), zoom),
+      meetings: state.meetings.map((meeting) => this.meetingService.calculateCalendarPosition(meeting, zoom)),
     }));
   }
 
@@ -65,15 +62,6 @@ export class ScheduleStore extends ComponentStore<ScheduleState> {
   }
 
   /**
-   * Calculates the top value in pixels based on the current time.
-   * @param date The date to calculate the top value for.
-   * @returns The top value in pixels.
-   */
-  calculateTopValue(date: Date, zoom: number): number {
-    return (differenceInMinutes(date, this.workDayStart) - this.circleRadius) * zoom;
-  }
-
-  /**
    * Runs every 60 seconds
    * @returns {Observable<number>} An observable that emits the current minute of the day every minute.
    */
@@ -81,7 +69,7 @@ export class ScheduleStore extends ComponentStore<ScheduleState> {
     return timer(0, 60000).pipe(
       switchMap(() => {
         return of(
-          this.calculateTopValue(
+          calculateNowLineTopValue(
             new Date(),
             this.get((state) => state.zoom),
           ),
@@ -100,6 +88,25 @@ export class ScheduleStore extends ComponentStore<ScheduleState> {
           tapResponse(
             (response) => {
               this.patchState({ nowLinePx: response });
+            },
+            (err) => console.log(err),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  /**
+   * Updates the schedule state. This is the main function that is called to update the schedule every 60 seconds
+   */
+  readonly getMeetings = this.effect(($) =>
+    $.pipe(
+      switchMap(() =>
+        this.meetingService.getMeetingList().pipe(
+          tapResponse(
+            (meetings) => {
+              console.log(meetings);
+              this.patchState({ meetings });
             },
             (err) => console.log(err),
           ),

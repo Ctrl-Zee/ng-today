@@ -13,4 +13,8 @@
   height: 75%;
   overflow-y: auto;
   overflow-x: hidden;
+
+  @media screen and (max-width: 768px) {
+    width: 95%;
+  }
 }

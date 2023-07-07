@@ -9,4 +9,13 @@
     <div class="hour-label">{{ block.hourLabel }}</div>
     <div class="hour-line"></div>
   </div>
+
+  <div
+    *ngFor="let meeting of config.meetings"
+    [style.top.px]="meeting.topPx"
+    [style.height.px]="meeting.heightPx"
+    class="meeting"
+  >
+    <p>{{ meeting.title }}</p>
+  </div>
 </div>

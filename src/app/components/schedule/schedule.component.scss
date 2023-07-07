@@ -25,11 +25,10 @@ $hour-label-width: 70px;
 
 .now-line {
   position: absolute;
-  // top: 595px; // -5px because of the circle radius
   left: 0;
   right: 0;
   z-index: 100;
-  margin-left: $hour-label-width;
+  margin-left: 60px;
   display: flex;
   align-items: center;
 
@@ -47,23 +46,14 @@ $hour-label-width: 70px;
   }
 }
 
-// .schedule {
-//   width: 100%;
-//   height: 100%;
-// }
-
-// .background {
-//   width: 100%;
-//   height: 100%;
-// }
-
-// .hour-line {
-//   stroke: var(--surface-border);
-//   fill: var(--surface-border);
-//   stroke-width: 2;
-// }
-
-// .hour-label {
-//   font-size: 0.875rem;
-//   fill: var(--surface-900);
-// }
+.meeting {
+  width: 50%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  background-image: linear-gradient(var(--gradient-colors));
+  color: var(--surface-overlay);
+  margin-left: $hour-label-width;
+  border-radius: 6px;
+}
